@@ -1,0 +1,224 @@
+<!-- https://github.com/nerfies/nerfies.github.io -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Patient-level intracranial hemorrhage classification on CQ500 using DBN-based representations with Euclidean and Hyperbolic geometries.">
+  <meta name="keywords"
+        content="CQ500, Intracranial Hemorrhage, DBN, RBM, Hyperbolic Learning, Evidential Deep Learning, Medical Imaging">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>DBN-based Patient-Level ICH Classification (CQ500)</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./static/images/logo.png">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+
+<body>
+
+<!-- ========================= NAVBAR ========================= -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow:1; justify-content:center;">
+      <a class="navbar-item" href="#">
+        <span class="icon"><i class="fas fa-brain"></i></span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ========================= HERO ========================= -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+
+          <h1 class="title is-1 publication-title">
+            DBN-based Patient-Level Intracranial Hemorrhage Classification
+          </h1>
+
+          <h2 class="subtitle is-4">
+            Euclidean vs Hyperbolic Representation Learning on the CQ500 Dataset
+          </h2>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+                Machara Sai Manikanta Eswar<sup>1,<strong>*</strong></sup>, Nikhileswara Rao Sulake<sup>1,<strong>*</strong></sup>, Sivalal Kethavath<sup>1</sup>, Phaneendra Yalavarthy<sup>2</sup>
+            </span>
+          </div>
+            
+          <div class="is-size-6 publication-authors">
+            <span class="author-block">
+                <sup>1</sup>Rajiv Gandhi University of Knowledge Technologies, Nuzvid, <sup>2</sup>Indian Institute of Science, Bangalore
+            </span>
+          </div>
+          <div class="is-size-6 publication-authors" style="margin-top: 0.3rem;">
+            <span class="author-block">
+              <sup>*</sup>Equal Contribution
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ABSTRACT ========================= -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths"> 
+        <div class="columns is-centered">
+          <div class="column is-four-fifths has-text-centered">
+            <figure class="image">
+              <img src="./static/images/DBN_RBN_Project_Architecture_Version1.png"
+                  alt="DBN-based Patient-Level ICH Classification Architecture">
+            </figure>
+          </div>
+        </div>
+
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Intracranial hemorrhage (ICH) detection from head CT scans is a critical task in emergency
+            radiology, where predictions must be made at the patient (study) level rather than at
+            individual slice level. In this work, we propose a Deep Belief Network (DBN)-based
+            patient-level classification framework evaluated on the CQ500 dataset.
+          </p>
+          <p>
+            The model employs unsupervised slice-level pretraining using stacked Restricted Boltzmann
+            Machines (RBMs), followed by supervised patient-level fine-tuning. Slice-level features
+            extracted by the pretrained DBN encoder are aggregated using a max-pooling strategy to
+            form a single patient embedding, enabling clinically valid study-level predictions.
+          </p>
+          <p>
+            We systematically compare Euclidean and Hyperbolic latent geometries, along with standard
+            cross-entropy and Evidential Deep Learning (EDL) losses, to study their impact on
+            classification performance, calibration, and predictive uncertainty.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= DATASET ========================= -->
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">Dataset: CQ500</h2>
+    <p>
+      CQ500 is a large-scale head CT dataset consisting of multiple axial slices per patient study.
+      Each study is annotated at the patient level as either normal or containing intracranial
+      hemorrhage.
+    </p>
+    <ul>
+      <li><strong>Task:</strong> Binary patient-level classification (ICH vs Normal)</li>
+      <li><strong>Input:</strong> Variable-length CT slice stacks per patient</li>
+      <li><strong>Labels:</strong> One label per patient (study-level)</li>
+      <li><strong>Evaluation:</strong> Strict patient-wise train/validation/test splits</li>
+    </ul>
+    <p>
+      Slice-level labels are not used. All losses and metrics are computed exclusively at the
+      patient level to avoid data leakage and ensure clinical validity.
+    </p>
+  </div>
+</section>
+
+<!-- ========================= METHODOLOGY ========================= -->
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">Methodology</h2>
+
+    <h3 class="title is-4">Stage 1: Unsupervised Slice-Level Pretraining</h3>
+    <p>
+      Individual CT slices are flattened and used to pretrain a stacked DBN composed of multiple
+      RBMs using Contrastive Divergence. This stage is label-free and focuses on learning robust
+      slice-level representations.
+    </p>
+
+    <h3 class="title is-4">Stage 2: Patient-Level Classification</h3>
+    <p>
+      During supervised training, each slice is passed through the pretrained DBN encoder to obtain
+      slice embeddings. These embeddings are aggregated using max pooling across slices to form a
+      single patient-level embedding.
+    </p>
+
+    <p>
+      A multilayer perceptron (MLP) classifier operates on the patient embedding to produce the final
+      binary prediction. Loss computation and evaluation are performed strictly at the patient level.
+    </p>
+  </div>
+</section>
+
+<!-- ========================= GEOMETRY & UNCERTAINTY ========================= -->
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">Representation Geometry and Uncertainty</h2>
+    <p>
+      The framework supports both Euclidean and Hyperbolic latent spaces for DBN representations.
+      Hyperbolic geometry is explored due to its suitability for hierarchical and imbalanced data
+      structures commonly observed in medical imaging.
+    </p>
+    <p>
+      In addition to standard cross-entropy loss, Evidential Deep Learning (EDL) is employed to
+      explicitly model predictive uncertainty at the patient level. This enables analysis of model
+      confidence alongside classification performance.
+    </p>
+  </div>
+</section>
+
+<!-- ========================= EVALUATION ========================= -->
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">Evaluation Protocol</h2>
+    <ul>
+      <li>Patient-level Accuracy</li>
+      <li>Sensitivity and Specificity</li>
+      <li>Area Under ROC Curve (AUROC)</li>
+      <li>Calibration and uncertainty analysis (for EDL)</li>
+    </ul>
+    <p>
+      No slice-level metrics are reported. All experiments strictly adhere to patient-wise data
+      splits with no overlap between training, validation, and test sets.
+    </p>
+  </div>
+</section>
+
+<!-- ========================= CONTRIBUTIONS ========================= -->
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">Key Contributions</h2>
+    <ul>
+      <li>Patient-level DBN-based classification framework for CQ500</li>
+      <li>Explicit separation of slice-level representation learning and patient-level decision making</li>
+      <li>Comparison of Euclidean and Hyperbolic latent geometries</li>
+      <li>Integration of uncertainty-aware learning using EDL</li>
+      <li>Clinically valid evaluation protocol with strict patient-wise splitting</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        Research project on patient-level intracranial hemorrhage detection using deep belief networks.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
